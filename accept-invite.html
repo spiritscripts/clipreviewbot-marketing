@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accept your team invite, Whop Content Rewards Clip Reviewer</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .connect-wrap { max-width: 440px; margin: 100px auto; padding: 0 24px; text-align: center; }
+    .connect-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+    .connect-title { font-size: 18px; font-weight: 700; color: var(--text-title); margin-bottom: 8px; }
+    .connect-sub { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
+    #connect-actions { display: none; flex-direction: column; gap: 10px; margin-top: 20px; }
+    #connect-actions.visible { display: flex; }
+    .spinner {
+      width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; margin: 0 auto 16px; animation: spin 0.8s linear infinite;
+    }
+    .spinner.hidden { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="connect-wrap">
+    <div class="connect-card">
+      <div class="spinner hidden" id="connect-spinner"></div>
+      <div class="connect-title" id="connect-title">You're invited to a team</div>
+      <div class="connect-sub" id="connect-sub">Sign in with Google to accept and connect the extension. No separate subscription needed, you're joining your team's plan.</div>
+      <div id="connect-actions"></div>
+    </div>
+  </div>
+  <script src="accept-invite.js"></script>
+</body>
+</html>
