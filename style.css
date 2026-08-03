@@ -37,9 +37,15 @@ img { max-width: 100%; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px 32px; border-bottom: 1px solid var(--border);
 }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 17px; color: var(--text-title); }
-.brand img { width: 30px; height: 30px; border-radius: 8px; }
-.site-header nav { display: flex; align-items: center; gap: 20px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 17px; color: var(--text-title); min-width: 0; }
+.brand img { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; }
+/* Confirmed live bug: the full extension name doesn't fit next to the nav
+   buttons below ~700px, and with nothing stopping it, it wrapped to 5 lines
+   and physically overlapped the buttons instead of just looking cramped.
+   Truncating with an ellipsis keeps the header a single line no matter the
+   width; site-header's own flex-wrap below is the second line of defense. */
+.brand span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.site-header nav { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
 .site-header nav a { text-decoration: none; color: var(--text-secondary); font-size: 14px; }
 .site-header nav a:hover { color: var(--text-primary); }
 .site-header .btn { height: 38px; padding: 0 16px; font-size: 13px; }
