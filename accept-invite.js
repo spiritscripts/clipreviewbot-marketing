@@ -61,6 +61,12 @@ async function attemptHandoff(apiKey, ownerEmail) {
     title: "Couldn't reach the extension",
     sub: "Install it if you haven't yet, then retry -- your seat is already accepted either way.",
     actionsHtml: `
+      <ol class="install-steps">
+        <li>Download the .zip below and unzip it.</li>
+        <li>Open <code>chrome://extensions</code> in Chrome.</li>
+        <li>Turn on <strong>Developer mode</strong> (top right).</li>
+        <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
+      </ol>
       <a class="btn btn-primary btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
       <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry</button>
     `,
