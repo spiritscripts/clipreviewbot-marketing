@@ -112,6 +112,16 @@ img { max-width: 100%; }
 .install-steps { font-size: 13.5px; color: var(--text-secondary); padding-left: 20px; margin: 0 0 22px; }
 .install-steps li { margin-bottom: 6px; }
 .install-steps code { background: var(--surface-alt); padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+.connection-code-box {
+  background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px; margin-bottom: 10px;
+}
+.connection-code-label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-tertiary); margin-bottom: 8px; }
+.connection-code-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--text-primary);
+  word-break: break-all; line-height: 1.5; margin-bottom: 10px;
+}
+.connection-code-note { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 20px; }
 #download-mobile-content { display: none; }
 .modal-link-box {
   background: var(--surface-alt); border: 1px solid var(--border); border-radius: 8px;

@@ -9,10 +9,12 @@
 //                     routes/contentRewardsBot.js's /create-checkout-session).
 // Either way, the end state is the same: mint a real Clipbait API key and
 // hand it straight to the extension over chrome.runtime.sendMessage -- no
-// copy/pasting, ever. If the extension can't be reached (not installed
-// yet, or its ID below isn't filled in), the fix is "go install it and
-// retry", not "here's a raw key to type in somewhere" -- there's no such
-// box in the extension on purpose.
+// copy/pasting, in the common case. If the extension can't be reached
+// (mainly: unpacked dev-mode installs get a different ID per machine, so
+// this ALWAYS fails for everyone except the developer until the Web Store
+// listing is live), fall back to showing the key as a "connection code"
+// the user pastes into the extension's Home tab themselves -- also emailed
+// to them so it isn't lost if this tab closes.
 
 const API_ORIGIN = "https://app.clipbait.ai";
 
@@ -60,7 +62,41 @@ function sendToExtension(apiKey) {
   });
 }
 
-async function attemptHandoff(apiKey) {
+// Best-effort -- fires the invite/connection-code email; the code shown
+// directly on the page (from the key we already have in memory) is the
+// real source of truth, this is just a backup in the user's inbox.
+function sendConnectionCodeEmail(jwtToken) {
+  fetch(`${API_ORIGIN}/api/content-rewards-bot/send-connection-code`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  }).catch(() => {});
+}
+
+function renderConnectionCodeBox(apiKey) {
+  return `
+    <div class="connection-code-box">
+      <div class="connection-code-label">Your connection code</div>
+      <div class="connection-code-value" id="connection-code-value">${apiKey}</div>
+      <button class="btn btn-outline btn-block" id="copy-code-btn" type="button">Copy code</button>
+    </div>
+    <p class="connection-code-note">We also emailed you this code. Open the extension, go to the <strong>Home</strong> tab, and paste it under "Enter your connection code."</p>
+  `;
+}
+
+function wireConnectionCodeCopy(apiKey) {
+  const copyBtn = el("copy-code-btn");
+  if (!copyBtn) return;
+  copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(apiKey).then(() => {
+      copyBtn.textContent = "Copied!";
+      setTimeout(() => {
+        copyBtn.textContent = "Copy code";
+      }, 1500);
+    });
+  });
+}
+
+async function attemptHandoff(apiKey, jwtToken) {
   const result = await sendToExtension(apiKey);
   if (result.ok) {
     showResult({
@@ -70,29 +106,30 @@ async function attemptHandoff(apiKey) {
     return;
   }
 
-  // Not a "here's a key, go paste it somewhere" fallback -- the fix for
-  // "extension unreachable" is installing the extension (or, if it's
-  // already installed, just retrying once it's had a moment to load).
+  sendConnectionCodeEmail(jwtToken);
+
   showResult({
-    title: "Couldn't reach the extension",
-    sub: "Install it if you haven't yet, then retry -- this page keeps your account connected either way.",
+    title: "Couldn't connect automatically",
+    sub: "That's normal right after installing, or if this browser can't reach the extension directly -- use your connection code below instead.",
     actionsHtml: `
+      ${renderConnectionCodeBox(apiKey)}
       <ol class="install-steps">
-        <li>Download the .zip below and unzip it.</li>
+        <li>Don't have the extension yet? Download the .zip below and unzip it.</li>
         <li>Open <code>chrome://extensions</code> in Chrome.</li>
         <li>Turn on <strong>Developer mode</strong> (top right).</li>
         <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
       </ol>
-      <a class="btn btn-primary btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
-      <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry</button>
+      <a class="btn btn-outline btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
+      <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry automatic connection</button>
     `,
   });
+  wireConnectionCodeCopy(apiKey);
   el("connect-retry-btn").addEventListener("click", () => {
     spinner.style.display = "block";
     titleEl.textContent = "Connecting your extension…";
     subEl.textContent = "Hang tight, this only takes a second.";
     actionsEl.classList.remove("visible");
-    attemptHandoff(apiKey);
+    attemptHandoff(apiKey, jwtToken);
   });
 }
 
@@ -107,7 +144,7 @@ async function mintApiKeyAndHandoff(jwtToken) {
   if (!keyResp.ok) throw new Error(`status ${keyResp.status}`);
   const keyData = await keyResp.json();
   if (!keyData.apiKey) throw new Error("no api key returned");
-  await attemptHandoff(keyData.apiKey);
+  await attemptHandoff(keyData.apiKey, jwtToken);
 }
 
 // Entry point: just finished Google sign-in. Check subscription status --

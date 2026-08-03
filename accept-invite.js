@@ -48,7 +48,39 @@ function sendToExtension(apiKey) {
   });
 }
 
-async function attemptHandoff(apiKey, ownerEmail) {
+// Best-effort -- see connect.js's copy of this same helper.
+function sendConnectionCodeEmail(jwtToken) {
+  fetch(`${API_ORIGIN}/api/content-rewards-bot/send-connection-code`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  }).catch(() => {});
+}
+
+function renderConnectionCodeBox(apiKey) {
+  return `
+    <div class="connection-code-box">
+      <div class="connection-code-label">Your connection code</div>
+      <div class="connection-code-value" id="connection-code-value">${apiKey}</div>
+      <button class="btn btn-outline btn-block" id="copy-code-btn" type="button">Copy code</button>
+    </div>
+    <p class="connection-code-note">We also emailed you this code. Open the extension, go to the <strong>Home</strong> tab, and paste it under "Enter your connection code."</p>
+  `;
+}
+
+function wireConnectionCodeCopy(apiKey) {
+  const copyBtn = el("copy-code-btn");
+  if (!copyBtn) return;
+  copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(apiKey).then(() => {
+      copyBtn.textContent = "Copied!";
+      setTimeout(() => {
+        copyBtn.textContent = "Copy code";
+      }, 1500);
+    });
+  });
+}
+
+async function attemptHandoff(apiKey, jwtToken, ownerEmail) {
   const result = await sendToExtension(apiKey);
   if (result.ok) {
     showResult({
@@ -57,23 +89,28 @@ async function attemptHandoff(apiKey, ownerEmail) {
     });
     return;
   }
+
+  sendConnectionCodeEmail(jwtToken);
+
   showResult({
-    title: "Couldn't reach the extension",
-    sub: "Install it if you haven't yet, then retry -- your seat is already accepted either way.",
+    title: "Couldn't connect automatically",
+    sub: "That's normal right after installing, or if this browser can't reach the extension directly -- use your connection code below instead. Your seat is already accepted either way.",
     actionsHtml: `
+      ${renderConnectionCodeBox(apiKey)}
       <ol class="install-steps">
-        <li>Download the .zip below and unzip it.</li>
+        <li>Don't have the extension yet? Download the .zip below and unzip it.</li>
         <li>Open <code>chrome://extensions</code> in Chrome.</li>
         <li>Turn on <strong>Developer mode</strong> (top right).</li>
         <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
       </ol>
-      <a class="btn btn-primary btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
-      <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry</button>
+      <a class="btn btn-outline btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
+      <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry automatic connection</button>
     `,
   });
+  wireConnectionCodeCopy(apiKey);
   el("connect-retry-btn").addEventListener("click", () => {
     showResult({ title: "Connecting your extension…", sub: "Hang tight, this only takes a second.", showSpinner: true });
-    attemptHandoff(apiKey, ownerEmail);
+    attemptHandoff(apiKey, jwtToken, ownerEmail);
   });
 }
 
@@ -96,7 +133,7 @@ async function acceptAndConnect(inviteToken, jwtToken) {
     const keyData = await keyResp.json();
     if (!keyData.apiKey) throw new Error("no api key returned");
 
-    await attemptHandoff(keyData.apiKey, acceptData.ownerEmail);
+    await attemptHandoff(keyData.apiKey, jwtToken, acceptData.ownerEmail);
   } catch (err) {
     showResult({ title: "Couldn't accept this invite", sub: err.message || "Something went wrong. Contact support and we'll sort it out." });
   }
