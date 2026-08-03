@@ -1,8 +1,14 @@
-// connect.js -- Stripe's hosted Checkout redirects back here with
-// ?session_id={CHECKOUT_SESSION_ID} once payment succeeds (see
-// success_url in routes/contentRewardsBot.js's /create-checkout-session).
-// Job: turn that session id into a real Clipbait API key, then hand that
-// key straight to the extension over chrome.runtime.sendMessage -- no
+// connect.js -- lands here from one of two places:
+//   ?token=...       Google OAuth just finished (routes/auth.js's
+//                     /google/callback, redirected here via return_to).
+//                     Check whether this account is already subscribed --
+//                     if so, skip Stripe entirely and go straight to the
+//                     extension handoff; if not, send them to Stripe
+//                     Checkout now that we know who they are.
+//   ?session_id=...  Stripe Checkout just finished (see success_url in
+//                     routes/contentRewardsBot.js's /create-checkout-session).
+// Either way, the end state is the same: mint a real Clipbait API key and
+// hand it straight to the extension over chrome.runtime.sendMessage -- no
 // copy/pasting, ever. If the extension can't be reached (not installed
 // yet, or its ID below isn't filled in), the fix is "go install it and
 // retry", not "here's a raw key to type in somewhere" -- there's no such
@@ -84,40 +90,72 @@ async function attemptHandoff(apiKey) {
   });
 }
 
-(async function connect() {
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id");
-  if (!sessionId) {
-    showResult({ title: "Missing checkout session", sub: "This link is incomplete. Try subscribing again from the pricing page." });
+// Mints (or fetches the existing) API key for an authenticated user and
+// hands it to the extension. Shared by both entry points below once each
+// has independently confirmed the account is a real, paid subscriber.
+async function mintApiKeyAndHandoff(jwtToken) {
+  const keyResp = await fetch(`${API_ORIGIN}/api/users/me/api-key`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  });
+  if (!keyResp.ok) throw new Error(`status ${keyResp.status}`);
+  const keyData = await keyResp.json();
+  if (!keyData.apiKey) throw new Error("no api key returned");
+  await attemptHandoff(keyData.apiKey);
+}
+
+// Entry point: just finished Google sign-in. Check subscription status --
+// already paid means straight to the extension, no Stripe involved at all;
+// not subscribed sends them to Stripe now that we know their account.
+async function handleGoogleReturn(jwtToken) {
+  const statusResp = await fetch(`${API_ORIGIN}/api/content-rewards-bot/status`, {
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  });
+  if (!statusResp.ok) throw new Error(`status ${statusResp.status}`);
+  const status = await statusResp.json();
+
+  if (status.subscribed) {
+    await mintApiKeyAndHandoff(jwtToken);
     return;
   }
 
-  let apiKey;
-  try {
-    // Verifies the Stripe Checkout Session actually paid, activates the
-    // subscription, and returns a short-lived JWT for this account.
-    const sessResp = await fetch(`${API_ORIGIN}/api/content-rewards-bot/checkout-session/${encodeURIComponent(sessionId)}`);
-    const sessData = await sessResp.json();
-    if (!sessResp.ok || !sessData.token) throw new Error(sessData?.message || "Couldn't verify your payment.");
+  titleEl.textContent = "Redirecting to checkout…";
+  subEl.textContent = "You're signed in -- just need to finish subscribing.";
+  const sessResp = await fetch(`${API_ORIGIN}/api/content-rewards-bot/create-checkout-session`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  });
+  const sessData = await sessResp.json();
+  if (!sessResp.ok || !sessData.url) throw new Error(sessData?.message || "Something went wrong. Please try again.");
+  window.location.href = sessData.url;
+}
 
-    // Mint (or fetch the existing) API key using that JWT -- reuses the
-    // same endpoint the main Clipbait app already uses for agent/MCP/CLI
-    // access, nothing new on the backend for this part.
-    const keyResp = await fetch(`${API_ORIGIN}/api/users/me/api-key`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${sessData.token}` },
-    });
-    if (!keyResp.ok) throw new Error(`status ${keyResp.status}`);
-    const keyData = await keyResp.json();
-    apiKey = keyData.apiKey;
-    if (!apiKey) throw new Error("no api key returned");
+// Entry point: just finished Stripe Checkout. Verify the session actually
+// paid, activate the subscription, get a JWT for this account.
+async function handleStripeReturn(sessionId) {
+  const sessResp = await fetch(`${API_ORIGIN}/api/content-rewards-bot/checkout-session/${encodeURIComponent(sessionId)}`);
+  const sessData = await sessResp.json();
+  if (!sessResp.ok || !sessData.token) throw new Error(sessData?.message || "Couldn't verify your payment.");
+  await mintApiKeyAndHandoff(sessData.token);
+}
+
+(async function connect() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+  const sessionId = params.get("session_id");
+
+  try {
+    if (token) {
+      await handleGoogleReturn(token);
+    } else if (sessionId) {
+      await handleStripeReturn(sessionId);
+    } else {
+      showResult({ title: "Missing session", sub: "This link is incomplete. Try again from the homepage." });
+    }
   } catch (err) {
     showResult({
       title: "Couldn't connect automatically",
-      sub: err.message || "Something went wrong fetching your account. Contact support and we'll sort it out.",
+      sub: err.message || "Something went wrong. Contact support and we'll sort it out.",
     });
-    return;
   }
-
-  await attemptHandoff(apiKey);
 })();
