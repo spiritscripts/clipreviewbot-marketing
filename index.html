@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Whop Content Rewards Clip Reviewer, Autonomous Clip Reviewing by Clipbait.ai</title>
+  <meta name="description" content="An AI browser extension that reviews Whop Content Rewards clips, so clipping agencies can scale without hiring more moderators." />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="/">
+      <img src="assets/logo.png" alt="" />
+      <span>Whop Clip Reviewer</span>
+    </a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <button class="btn btn-outline" id="nav-download-btn">Download Extension</button>
+      <button class="btn btn-primary" id="nav-signin-btn">Sign In</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Tired of Manually Reviewing Every Clip? Let AI Approve &amp; Reject For You</h1>
+      <p class="sub">The bot reads every Whop Content Rewards submission's caption, bio, and engagement against your campaign brief, then clicks Approve or Reject itself.</p>
+      <button class="btn btn-primary btn-hero" id="hero-signin-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 1.8 L12 7 L3.5 12.2 Z" fill="#ffffff"></path></svg>
+        Sign in and get started
+      </button>
+      <div class="hero-note">$299/mo &middot; cancel anytime</div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="feature">
+        <div class="feature-title">Approves &amp; rejects for you</div>
+        <div class="feature-desc">Clicks Approve or Reject on Whop itself. No manual review queue.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Your campaign brief, your rules</div>
+        <div class="feature-desc">Save multiple briefs and switch between clients.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Whitelist trusted editors</div>
+        <div class="feature-desc">Known-good editors skip review and auto-approve.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Built for agencies</div>
+        <div class="feature-desc">Team seats so your mods can run reviews too.</div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <div class="pricing-card">
+        <div class="pricing-price"><span>$299</span>/mo</div>
+        <div class="pricing-note">Billed monthly &middot; cancel anytime &middot; 3 team seats included</div>
+        <button class="btn btn-primary btn-block" id="pricing-signin-btn">Sign in and get started</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Download modal -->
+  <div class="modal-backdrop" id="download-backdrop">
+    <div class="modal" id="download-modal">
+      <button class="modal-close" id="download-close-btn">&times;</button>
+      <h2>Download the extension</h2>
+      <p class="modal-sub">Not yet on the Chrome Web Store, install it manually, it takes under a minute:</p>
+      <ol class="install-steps">
+        <li>Download the .zip below and unzip it.</li>
+        <li>Open <code>chrome://extensions</code> in Chrome.</li>
+        <li>Turn on <strong>Developer mode</strong> (top right).</li>
+        <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
+      </ol>
+      <a class="btn btn-primary btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download .zip</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span>&copy; Clipbait.ai</span>
+    <span>Whop Content Rewards Clip Reviewer Bot &middot; By Clipbait.ai</span>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

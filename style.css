@@ -1,0 +1,101 @@
+:root {
+  --accent: #ff7a33;
+  --accent-ink: #a34715;
+  --bg: #000000;
+  --surface: #121212;
+  --surface-alt: #1a1a1a;
+  --border: rgba(255,255,255,0.12);
+  --text-title: #ffffff;
+  --text-primary: #eaeaea;
+  --text-secondary: #a3a3a8;
+  --text-tertiary: #77777d;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+a { color: inherit; }
+img { max-width: 100%; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 22px; border-radius: 999px; border: none; cursor: pointer;
+  font-size: 14px; font-weight: 700; text-decoration: none;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #ff8a4d; }
+.btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border); border-radius: 10px; }
+.btn-block { width: 100%; }
+
+/* Header */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px; border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 17px; color: var(--text-title); }
+.brand img { width: 30px; height: 30px; border-radius: 8px; }
+.site-header nav { display: flex; align-items: center; gap: 20px; }
+.site-header nav a { text-decoration: none; color: var(--text-secondary); font-size: 14px; }
+.site-header nav a:hover { color: var(--text-primary); }
+.site-header .btn { height: 38px; padding: 0 16px; font-size: 13px; }
+
+/* Hero */
+.hero { max-width: 900px; margin: 0 auto; padding: 110px 24px 60px; text-align: center; }
+.hero h1 { font-size: 52px; font-weight: 800; margin: 0 0 20px; color: var(--text-title); line-height: 1.15; letter-spacing: -0.01em; }
+.hero .sub { font-size: 17px; color: var(--text-secondary); max-width: 620px; margin: 0 auto; }
+.btn-hero { margin-top: 32px; height: 54px; padding: 0 30px; font-size: 15px; }
+.hero-note { font-size: 13px; color: var(--text-tertiary); margin-top: 14px; }
+
+/* Features */
+.features {
+  max-width: 960px; margin: 0 auto; padding: 40px 24px 70px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  border-top: 1px solid var(--border);
+}
+.feature-title { font-size: 14.5px; font-weight: 700; color: var(--text-title); margin-bottom: 6px; }
+.feature-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* Pricing */
+.pricing { max-width: 420px; margin: 0 auto; padding: 20px 24px 100px; }
+.pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 36px; text-align: center; }
+.pricing-price { font-size: 44px; font-weight: 800; color: var(--text-title); }
+.pricing-price span { font-size: 44px; }
+.pricing-note { font-size: 12.5px; color: var(--text-tertiary); margin: 8px 0 26px; }
+
+/* Footer */
+.site-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-tertiary);
+}
+
+/* Modal */
+.modal-backdrop {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  align-items: center; justify-content: center; padding: 20px; z-index: 100;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  position: relative; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px; width: 100%; max-width: 400px;
+}
+.modal h2 { margin: 0 0 6px; font-size: 20px; color: var(--text-title); }
+.modal-sub { font-size: 13px; color: var(--text-secondary); margin: 0 0 20px; }
+.modal-close { all: unset; position: absolute; top: 18px; right: 18px; cursor: pointer; color: var(--text-tertiary); font-size: 20px; line-height: 1; }
+.install-steps { font-size: 13.5px; color: var(--text-secondary); padding-left: 20px; margin: 0 0 22px; }
+.install-steps li { margin-bottom: 6px; }
+.install-steps code { background: var(--surface-alt); padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+
+@media (max-width: 760px) {
+  .features { grid-template-columns: repeat(2, 1fr); }
+  .site-header nav a { display: none; }
+}
+@media (max-width: 640px) {
+  .features { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 32px; }
+}
