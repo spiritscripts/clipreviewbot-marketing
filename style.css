@@ -114,12 +114,15 @@ img { max-width: 100%; }
   .features { grid-template-columns: 1fr; }
   .hero h1 { font-size: 32px; }
   .hero { padding-top: 90px; }
-  /* Confirmed live bug: the full brand name has nowhere to go next to two
-     pill buttons at this width -- it was truncating to "W.." instead of
-     just looking cramped. The logo alone is enough brand presence here;
-     the full name is still in the <title> tag and the page content itself. */
-  .site-header { padding: 14px 16px; gap: 10px; }
-  .brand span { display: none; }
+  /* Confirmed live bug (round 2): the full brand name has nowhere to go
+     next to two pill buttons at this width -- it either truncated to "W.."
+     or, when hidden outright, dropped the name entirely, which reads as
+     broken/unbranded on mobile. Fix: wrap the nav to its own row below the
+     logo/name instead of fighting them for the same line -- the name gets
+     the full viewport width to itself, buttons get their own row under it. */
+  .site-header { padding: 14px 16px; gap: 10px; flex-wrap: wrap; }
+  .brand span { white-space: normal; overflow: visible; text-overflow: clip; font-size: 15px; }
+  .site-header nav { flex-basis: 100%; justify-content: flex-end; gap: 10px; }
   .site-header .btn { padding: 0 14px; font-size: 12.5px; }
   /* Confirmed live bug: "© Clipbait.ai" and "...By Clipbait.ai" sat right
      next to each other with no wrap room, reading as one run-on line
