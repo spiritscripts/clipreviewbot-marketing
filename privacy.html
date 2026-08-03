@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy, Whop Content Rewards Clip Reviewer</title>
+  <meta name="description" content="Privacy policy for the Whop Content Rewards Clip Reviewer Chrome extension by Clipbait.ai." />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="/">
+      <img src="assets/logo.png" alt="" />
+      <span>Whop Content Rewards Clip Reviewer</span>
+    </a>
+    <nav>
+      <a href="/">Home</a>
+    </nav>
+  </header>
+
+  <main class="legal">
+    <h1>Privacy Policy</h1>
+    <div class="legal-updated">Last updated: August 3, 2026</div>
+
+    <p>This policy covers the <strong>Whop Content Rewards Clip Reviewer</strong> Chrome extension and this website (clipreviewbot.clipbait.ai), both operated by Clipbait.ai. It explains what data the extension touches, why, and where it goes.</p>
+
+    <h2>What the extension does</h2>
+    <p>The extension reads Whop Content Rewards submission cards on pages you're already viewing on whop.com, checks each one against a campaign brief you provide, and clicks Approve or Reject on your behalf. It only runs when you click "Run Clip Review Bot" in the popup.</p>
+
+    <h2>What data it accesses</h2>
+    <ul>
+      <li><strong>Whop submission data</strong> -- while running, the extension reads each submission card's title, submitter name, video/post URL, and engagement stats directly from the Whop page you're on.</li>
+      <li><strong>Public social media data</strong> -- for the specific post being reviewed, the review server fetches that post's public caption, bio, profile picture, and follower count from the platform it was posted on (via Apify), to check it against your campaign brief.</li>
+      <li><strong>Account info</strong> -- if you sign in, we receive your name, email, and profile picture from Google. Payment is handled entirely by Stripe; we never see or store your card details.</li>
+      <li><strong>Data you enter</strong> -- your campaign briefs, whitelisted editor usernames, and team seat invites, which you type directly into the extension.</li>
+    </ul>
+
+    <h2>Where it's stored</h2>
+    <ul>
+      <li><strong>In your browser</strong> -- campaign briefs, whitelist, theme preference, review history, and your account API key are stored locally via Chrome's extension storage. This stays on your device and is cleared if you uninstall the extension or use "Clear logs."</li>
+      <li><strong>On our servers</strong> -- your account record (email, subscription status, team seats) is stored on Clipbait's backend for as long as your account exists. Submission data sent to the review server is used only to produce that submission's verdict and is not retained beyond what's needed to do that.</li>
+    </ul>
+
+    <h2>Who else sees it</h2>
+    <p>We use a small number of third-party services to make the extension work, and only send them what each one needs:</p>
+    <ul>
+      <li><strong>Google Gemini</strong> -- analyzes caption/bio text and images to judge compliance with your brief.</li>
+      <li><strong>Apify</strong> -- fetches public post data (caption, bio, engagement) from the platform a clip was posted on.</li>
+      <li><strong>Stripe</strong> -- processes payment for subscriptions. We never receive your raw card details.</li>
+      <li><strong>Google Sign-In</strong> -- authenticates your account.</li>
+    </ul>
+    <p>We do not sell your data, show ads, or track you across other websites.</p>
+
+    <h2>Permissions the extension requests</h2>
+    <ul>
+      <li><strong>Whop (whop.com, *.apps.whop.com)</strong> -- to read submission cards and click Approve/Reject.</li>
+      <li><strong>app.clipbait.ai</strong> -- to check your account/subscription status.</li>
+      <li><strong>The review server (clipreviewbot-api.onrender.com)</strong> -- to send each submission for review and get back a verdict.</li>
+      <li><strong>Storage</strong> -- to save your settings (briefs, whitelist, theme) locally.</li>
+    </ul>
+
+    <h2>Your choices</h2>
+    <p>You can clear locally stored data anytime from the extension's popup ("Clear logs," removing whitelisted editors, or clearing a saved brief). To delete your account and associated data entirely, email us at <a href="mailto:info@clipbait.ai">info@clipbait.ai</a>.</p>
+
+    <h2>Children's privacy</h2>
+    <p>This extension is intended for business use by clipping agencies and is not directed at children under 13. We don't knowingly collect data from children.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, we'll update the date at the top of this page.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy or your data: <a href="mailto:info@clipbait.ai">info@clipbait.ai</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; Clipbait.ai</span>
+    <span>Whop Content Rewards Clip Reviewer Bot &middot; By Clipbait.ai</span>
+  </footer>
+
+</body>
+</html>
