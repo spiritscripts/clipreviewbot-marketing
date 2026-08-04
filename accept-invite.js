@@ -10,9 +10,9 @@
 const API_ORIGIN = "https://app.clipbait.ai";
 const MARKETING_ORIGIN = window.location.origin;
 
-// Same unpacked dev-mode ID as connect.js -- see that file's comment for
-// why this needs updating once the Web Store listing is live.
-const EXTENSION_ID = "igfodggfmfomkcpggakbdmankhpgmbof";
+// Same real Chrome Web Store ID as connect.js -- see that file's comment.
+const EXTENSION_ID = "pchbnkgobclbjfgchbmhafgopeopofph";
+const WEB_STORE_URL = `https://chromewebstore.google.com/detail/${EXTENSION_ID}`;
 
 const el = (id) => document.getElementById(id);
 const spinner = el("connect-spinner");
@@ -97,13 +97,7 @@ async function attemptHandoff(apiKey, jwtToken, ownerEmail) {
     sub: "That's normal right after installing, or if this browser can't reach the extension directly -- use your connection code below instead. Your seat is already accepted either way.",
     actionsHtml: `
       ${renderConnectionCodeBox(apiKey)}
-      <ol class="install-steps">
-        <li>Don't have the extension yet? Download the .zip below and unzip it.</li>
-        <li>Open <code>chrome://extensions</code> in Chrome.</li>
-        <li>Turn on <strong>Developer mode</strong> (top right).</li>
-        <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
-      </ol>
-      <a class="btn btn-outline btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
+      <a class="btn btn-primary btn-block" href="${WEB_STORE_URL}" target="_blank" rel="noopener">Don't have the extension yet? Add to Chrome</a>
       <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry automatic connection</button>
     `,
   });

@@ -18,11 +18,13 @@
 
 const API_ORIGIN = "https://app.clipbait.ai";
 
-// Currently the unpacked dev-mode ID from chrome://extensions (pre-Web-Store
-// launch). Swap this to the permanent Web Store ID once the listing is
-// approved -- unpacked IDs are derived from the local install path/key and
-// do NOT carry over to the published version.
-const EXTENSION_ID = "igfodggfmfomkcpggakbdmankhpgmbof";
+// The real Chrome Web Store ID -- same for every real user's install, unlike
+// the old unpacked dev-mode ID this replaced (that one was derived from the
+// local install path/key and only ever matched the developer's own machine,
+// which was the whole reason the automatic handoff below never worked for
+// anyone else).
+const EXTENSION_ID = "pchbnkgobclbjfgchbmhafgopeopofph";
+const WEB_STORE_URL = `https://chromewebstore.google.com/detail/${EXTENSION_ID}`;
 
 const el = (id) => document.getElementById(id);
 const spinner = el("connect-spinner");
@@ -113,13 +115,7 @@ async function attemptHandoff(apiKey, jwtToken) {
     sub: "That's normal right after installing, or if this browser can't reach the extension directly -- use your connection code below instead.",
     actionsHtml: `
       ${renderConnectionCodeBox(apiKey)}
-      <ol class="install-steps">
-        <li>Don't have the extension yet? Download the .zip below and unzip it.</li>
-        <li>Open <code>chrome://extensions</code> in Chrome.</li>
-        <li>Turn on <strong>Developer mode</strong> (top right).</li>
-        <li>Click <strong>Load unpacked</strong> and select the unzipped folder.</li>
-      </ol>
-      <a class="btn btn-outline btn-block" href="downloads/content-rewards-clip-reviewer.zip" download>Download the extension</a>
+      <a class="btn btn-primary btn-block" href="${WEB_STORE_URL}" target="_blank" rel="noopener">Don't have the extension yet? Add to Chrome</a>
       <button class="btn btn-outline btn-block" id="connect-retry-btn">Retry automatic connection</button>
     `,
   });
