@@ -24,7 +24,7 @@ const API_ORIGIN = "https://app.clipbait.ai";
 // which was the whole reason the automatic handoff below never worked for
 // anyone else).
 const EXTENSION_ID = "pchbnkgobclbjfgchbmhafgopeopofph";
-const WEB_STORE_URL = `https://chromewebstore.google.com/detail/${EXTENSION_ID}`;
+const WEB_STORE_URL = `https://chromewebstore.google.com/detail/whop-content-rewards-clip/${EXTENSION_ID}`;
 
 const el = (id) => document.getElementById(id);
 const spinner = el("connect-spinner");

@@ -14,22 +14,27 @@ const MARKETING_ORIGIN = window.location.origin;
 
 const el = (id) => document.getElementById(id);
 
-// --- Download modal ------------------------------------------------------------
-// Confirmed live bug: this modal always showed "open chrome://extensions"
-// desktop install steps, even to a visitor on their phone -- Chrome
-// extensions flatly can't be installed on mobile, so that's just a dead
-// end. IS_MOBILE swaps the modal to a "come back on your computer" message
-// with a copyable link instead of a useless .zip download.
+// --- Download ------------------------------------------------------------
+// Confirmed live bug (now moot for desktop): this modal used to always show
+// "open chrome://extensions" install steps, even to a visitor on their
+// phone -- Chrome extensions flatly can't be installed on mobile, so that
+// was a dead end. Now that the extension's on the Chrome Web Store, a
+// desktop visitor skips the modal entirely and goes straight there; the
+// modal only exists at all for the mobile case, where the store page
+// itself wouldn't help them either.
 const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const WEB_STORE_URL = "https://chromewebstore.google.com/detail/whop-content-rewards-clip/pchbnkgobclbjfgchbmhafgopeopofph";
 
 const downloadBackdrop = el("download-backdrop");
-function openDownload() {
-  el("download-desktop-content").style.display = IS_MOBILE ? "none" : "block";
-  el("download-mobile-content").style.display = IS_MOBILE ? "block" : "none";
-  downloadBackdrop.classList.add("open");
-}
+function openDownload() { downloadBackdrop.classList.add("open"); }
 function closeDownload() { downloadBackdrop.classList.remove("open"); }
-el("nav-download-btn").addEventListener("click", openDownload);
+el("nav-download-btn").addEventListener("click", () => {
+  if (IS_MOBILE) {
+    openDownload();
+  } else {
+    window.open(WEB_STORE_URL, "_blank", "noopener");
+  }
+});
 el("download-close-btn").addEventListener("click", closeDownload);
 downloadBackdrop.addEventListener("click", (e) => { if (e.target === downloadBackdrop) closeDownload(); });
 

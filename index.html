@@ -62,23 +62,18 @@
     </section>
   </main>
 
-  <!-- Download modal -->
+  <!-- Download modal -- desktop visitors now skip this entirely (nav-download-btn
+       sends them straight to the Chrome Web Store, see main.js). Only ever
+       opens for a mobile visitor, since Chrome extensions can't install
+       there and the store page itself wouldn't help them. -->
   <div class="modal-backdrop" id="download-backdrop">
     <div class="modal" id="download-modal">
       <button class="modal-close" id="download-close-btn">&times;</button>
       <h2>Download the extension</h2>
       <div class="modal-requirement">Requires desktop Google Chrome (or Edge/Brave). Chrome extensions can't be installed on a phone.</div>
-
-      <div id="download-desktop-content">
-        <p class="modal-sub">One click and you're set up:</p>
-        <a class="btn btn-primary btn-block" href="https://chromewebstore.google.com/detail/pchbnkgobclbjfgchbmhafgopeopofph" target="_blank" rel="noopener">Add to Chrome</a>
-      </div>
-
-      <div id="download-mobile-content">
-        <p class="modal-sub">You're on a phone right now -- open this page on your computer to install it. This link goes straight back here:</p>
-        <div class="modal-link-box" id="modal-link-box">clipreviewbot.clipbait.ai</div>
-        <button class="btn btn-primary btn-block" id="modal-copy-link-btn">Copy link</button>
-      </div>
+      <p class="modal-sub">You're on a phone right now -- open this page on your computer to install it. This link goes straight back here:</p>
+      <div class="modal-link-box" id="modal-link-box">clipreviewbot.clipbait.ai</div>
+      <button class="btn btn-primary btn-block" id="modal-copy-link-btn">Copy link</button>
     </div>
   </div>
 

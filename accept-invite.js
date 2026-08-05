@@ -12,7 +12,7 @@ const MARKETING_ORIGIN = window.location.origin;
 
 // Same real Chrome Web Store ID as connect.js -- see that file's comment.
 const EXTENSION_ID = "pchbnkgobclbjfgchbmhafgopeopofph";
-const WEB_STORE_URL = `https://chromewebstore.google.com/detail/${EXTENSION_ID}`;
+const WEB_STORE_URL = `https://chromewebstore.google.com/detail/whop-content-rewards-clip/${EXTENSION_ID}`;
 
 const el = (id) => document.getElementById(id);
 const spinner = el("connect-spinner");
